@@ -1,8 +1,11 @@
 ﻿<Window x:Class="CurrencyConverter.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:prism="http://prismlibrary.com/"
+        prism:ViewModelLocator.AutoWireViewModel="True"
+              
         Title="{Binding Title}" Height="450" Width="800">
     <Grid>
-        
+        <ContentControl Margin="20" prism:RegionManager.RegionName="ContentRegion" />
     </Grid>
 </Window>
