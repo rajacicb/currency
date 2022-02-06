@@ -1,4 +1,7 @@
-﻿using ConversionModule.ViewModels;
+﻿using ConversionModule.DataProviders.Frankfurter;
+using ConversionModule.Interfaces;
+using ConversionModule.Repository;
+using ConversionModule.ViewModels;
 using ConversionModule.Views;
 using Prism.Ioc;
 using Prism.Modularity;
@@ -26,6 +29,8 @@ namespace ConversionModule
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             ViewModelLocationProvider.Register<ConversionView, ConversionViewModel>();
+            containerRegistry.Register<IDataProvider, FrankfurterDataProvider>();
+            containerRegistry.Register<ICurrencyRepository, CurrencyRepository>();
         }
     }
 }
