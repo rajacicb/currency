@@ -1,6 +1,8 @@
 ﻿using ConversionModule.Helpers;
 using ConversionModule.Interfaces;
 using ConversionModule.Models;
+using CurrencyConverter.Core.Events;
+using Prism.Events;
 using Prism.Mvvm;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,13 +23,15 @@ namespace ConversionModule.ViewModels
         #endregion
 
         #region Constructor
-        public ConversionViewModel(ICurrencyRepository repository)
+        public ConversionViewModel(ICurrencyRepository repository, IEventAggregator eventAggregator)
         {
             this.repository = repository;
+            var options = OptionsSerializer.LoadOptions();
             ToCollection = new ObservableCollection<Currency>(StaticCurrencies.GetDefaultCurrencies());
             FromCollection = new ObservableCollection<Currency>(StaticCurrencies.GetDefaultCurrencies());
-            SelectedTo = ToCollection.FirstOrDefault(x => x.Code.Equals("GBP"));
-            SelectedFrom = FromCollection.FirstOrDefault(x => x.Code.Equals("EUR"));
+            SelectedTo = ToCollection.FirstOrDefault(x => x.Code.Equals(options.First().To));
+            SelectedFrom = FromCollection.FirstOrDefault(x => x.Code.Equals(options.First().From));
+            eventAggregator.GetEvent<SaveOptionsEvent>().Subscribe(OnSaveOptionsEvent);
         }
         #endregion
 
@@ -106,6 +110,11 @@ namespace ConversionModule.ViewModels
             {
                 return amount;
             }
+        }
+
+        private void OnSaveOptionsEvent(string message)
+        {
+            OptionsSerializer.SaveOptions(new List<CurrencyOption>(1) { new CurrencyOption() { From = SelectedFrom.Code, To = SelectedTo.Code } });
         }
         #endregion
     }

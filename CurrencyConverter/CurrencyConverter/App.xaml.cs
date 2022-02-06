@@ -1,4 +1,6 @@
-﻿using CurrencyConverter.Views;
+﻿using CurrencyConverter.Core.Events;
+using CurrencyConverter.Views;
+using Prism.Events;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Unity;
@@ -23,6 +25,13 @@ namespace CurrencyConverter
         protected override IModuleCatalog CreateModuleCatalog()
         {
             return new ConfigurationModuleCatalog();
+        }
+        protected override void OnExit(ExitEventArgs e)
+        {
+            var eventAggregator = Container.Resolve<IEventAggregator>();
+            eventAggregator.GetEvent<SaveOptionsEvent>().Publish("Save");
+
+            base.OnExit(e);
         }
     }
 }
