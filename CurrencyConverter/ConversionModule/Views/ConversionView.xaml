@@ -3,7 +3,40 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True">
-    <Grid>
-        <TextBlock Text="{Binding Test}"/>
-    </Grid>
+    <Border Background="#33BDE3" CornerRadius="20">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="75" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="220" />
+                <ColumnDefinition Width="220" />
+            </Grid.ColumnDefinitions>
+
+            <Grid.Resources>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="Foreground" Value="White" />
+                    <Setter Property="Margin" Value="25,0,0,0" />
+                    <Setter Property="FontSize" Value="24" />
+                    <Setter Property="HorizontalAlignment" Value="Left" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                </Style>
+            </Grid.Resources>
+
+            <TextBlock Text="Amount"/>
+            <TextBox Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Margin="25,0,10,10" HorizontalAlignment="Stretch" Background="AliceBlue" VerticalContentAlignment="Center"/>
+
+            <TextBlock Text="From" Grid.Column="1"/>
+            <ComboBox ItemsSource="{Binding FromCollection}" SelectedItem="{Binding SelectedFrom}" DisplayMemberPath="DisplayName" Grid.Row="1" Grid.Column="1" Margin="25,0,10,10" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" Background="AliceBlue"/>
+
+            <TextBlock Text="To" Grid.Column="2" />
+            <ComboBox ItemsSource="{Binding ToCollection}" SelectedItem="{Binding SelectedTo}" DisplayMemberPath="DisplayName" Grid.Row="1" Grid.Column="2" Margin="25,0,10,10" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" Background="AliceBlue"/>
+
+            <TextBlock Text="{Binding ConversionResult}" Grid.Row="2" Grid.ColumnSpan="3" />
+        </Grid>
+    </Border>
 </UserControl>
