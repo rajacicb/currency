@@ -1,4 +1,4 @@
-﻿namespace ConversionModule.Models
+﻿namespace CurrencyConverter.Core.Models
 {
     public class Currency
     {
@@ -13,6 +13,7 @@
         {
             this.Name = name;
             this.Symbol = symbol;
+            this.DisplayCode = code;
         }
         #endregion
 
@@ -20,7 +21,8 @@
         public string Name { get; set; } = string.Empty;
         public string Symbol { get; set; } = string.Empty;
         public string Code { get; private set; } = string.Empty;
-        public string DisplayName => $"{Code} - {Name}";
+        public string DisplayCode { get; set; } = string.Empty;
+        public string DisplayName => $"{DisplayCode} - {Name}";
         #endregion
     }
 }

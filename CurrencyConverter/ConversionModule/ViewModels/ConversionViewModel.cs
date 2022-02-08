@@ -2,6 +2,8 @@
 using ConversionModule.Interfaces;
 using ConversionModule.Models;
 using CurrencyConverter.Core.Events;
+using CurrencyConverter.Core.Helpers;
+using CurrencyConverter.Core.Models;
 using Prism.Events;
 using Prism.Mvvm;
 using System.Collections.Generic;

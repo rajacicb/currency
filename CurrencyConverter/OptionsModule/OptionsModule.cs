@@ -1,4 +1,5 @@
-﻿using OptionsModule.ViewModels;
+﻿using OptionsModule.Dialogs;
+using OptionsModule.ViewModels;
 using OptionsModule.Views;
 using Prism.Ioc;
 using Prism.Modularity;
@@ -24,6 +25,7 @@ namespace OptionsModule
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
            ViewModelLocationProvider.Register<MainToolbarView, MainToolbarViewModel>();
+           containerRegistry.RegisterDialog<OptionsDialog, OptionsDialogViewModel>();
         }
     }
 }

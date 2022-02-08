@@ -1,9 +1,8 @@
-﻿using ConversionModule.Models;
-using System.Collections.Generic;
+﻿using CurrencyConverter.Core.Models;
 
-namespace ConversionModule.Helpers
+namespace CurrencyConverter.Core.Helpers
 {
-    internal static class StaticCurrencies
+    public static class StaticCurrencies
     {
         private static List<Currency> currencies = new List<Currency>(34)
         {
