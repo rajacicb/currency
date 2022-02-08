@@ -1,4 +1,4 @@
-﻿using CurrencyConverter.Core.Helpers;
+﻿using CurrencyConverter.Core.Interfaces;
 using CurrencyConverter.Core.Models;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -16,10 +16,16 @@ namespace OptionsModule.Dialogs
         private ObservableCollection<CurrencyItemViewModel> currencyList;
         private CurrencyItemViewModel selectedCurrency;
         private readonly IDialogService dialogService;
+        private readonly ISerializationProvider serializationProvider;
+        private readonly IDefaultCurrencyProvider defaultCurrencyProvider;
+        private readonly ICurrencyRepository currencyRepository;
         #endregion
 
         #region Constructor
-        public OptionsDialogViewModel(IDialogService dialogService)
+        public OptionsDialogViewModel(IDialogService dialogService, 
+                                      ISerializationProvider serializationProvider, 
+                                      IDefaultCurrencyProvider defaultCurrencyProvider,
+                                      ICurrencyRepository currencyRepository)
         {
             OKCommand = new DelegateCommand(OKCommandExecute);
             CancelCommand = new DelegateCommand(CancelCommandExecute);
@@ -27,12 +33,15 @@ namespace OptionsModule.Dialogs
             EditCommand = new DelegateCommand(EditCommandExecute, CanEditCommandExecute);
             DeleteCommand = new DelegateCommand(DeleteCommandExecute, CanDeleteCommandExecute);
             this.dialogService = dialogService;
+            this.serializationProvider = serializationProvider;
+            this.defaultCurrencyProvider = defaultCurrencyProvider;
+            this.currencyRepository = currencyRepository;
             PopulateCurrencyList();
         }
         #endregion
 
         #region Properties
-        public ObservableCollection<CurrencyItemViewModel> CurrencyList
+        public ObservableCollection<CurrencyItemViewModel> CurrencyCollection
         {
             get { return currencyList; }
             set { SetProperty(ref currencyList, value); }
@@ -73,8 +82,9 @@ namespace OptionsModule.Dialogs
                 if (result.Result == ButtonResult.OK)
                 {
                     if (result.Parameters.TryGetValue("editedModel", out CurrencyItemViewModel currency))
-                    {
-                        CurrencyList.Add(currency);
+                    { 
+                        currency.Code = currency.DisplayCode;
+                        CurrencyCollection.Add(currency);
                     }
                 }
             });
@@ -99,7 +109,7 @@ namespace OptionsModule.Dialogs
 
         private void DeleteCommandExecute()
         {
-            CurrencyList.Remove(SelectedCurrency);
+            CurrencyCollection.Remove(SelectedCurrency);
         }
 
         private bool CanEditCommandExecute()
@@ -110,12 +120,19 @@ namespace OptionsModule.Dialogs
         // Only allow removal of user added currencies
         private bool CanDeleteCommandExecute()
         {
-            return SelectedCurrency != null && !StaticCurrencies.GetDefaultCurrencies().Any(x => x.Code == SelectedCurrency.Code);
+            return SelectedCurrency != null && !defaultCurrencyProvider.GetDefaultCurrencies().Any(x => x.Code == SelectedCurrency.Code);
         }
 
         private void OKCommandExecute()
         {
-            // Save to XML file
+            List<Currency> currenciesToPersist = new List<Currency>(CurrencyCollection.Count);
+
+            foreach(var item in CurrencyCollection)
+            {
+                currenciesToPersist.Add(item.ToModel());
+            }
+
+            serializationProvider.WriteData(currenciesToPersist);
             RequestClose?.Invoke(new DialogResult(ButtonResult.OK));
         }
 
@@ -149,12 +166,12 @@ namespace OptionsModule.Dialogs
         {
             List<CurrencyItemViewModel> currencies = new List<CurrencyItemViewModel>();
 
-            foreach (Currency item in StaticCurrencies.GetDefaultCurrencies())
+            foreach (Currency item in currencyRepository.GetAllCurrencies())
             {
                 currencies.Add(new CurrencyItemViewModel(item));
             }
 
-            CurrencyList = new ObservableCollection<CurrencyItemViewModel>(currencies);
+            CurrencyCollection = new ObservableCollection<CurrencyItemViewModel>(currencies);
         }
         #endregion
     }

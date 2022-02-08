@@ -1,4 +1,9 @@
-﻿using OptionsModule.Dialogs;
+﻿using CurrencyConverter.Core.DataProviders;
+using CurrencyConverter.Core.DataProviders.Frankfurter;
+using CurrencyConverter.Core.Interfaces;
+using CurrencyConverter.Core.Repository;
+using CurrencyConverter.Core.Serializaton.XML;
+using OptionsModule.Dialogs;
 using OptionsModule.ViewModels;
 using OptionsModule.Views;
 using Prism.Ioc;
@@ -27,6 +32,10 @@ namespace OptionsModule
            ViewModelLocationProvider.Register<MainToolbarView, MainToolbarViewModel>();
            containerRegistry.RegisterDialog<OptionsDialog, OptionsDialogViewModel>();
            containerRegistry.RegisterDialog<EditCurrencyDialog, EditCurrencyDialogViewModel>();
+           containerRegistry.RegisterSingleton<IDefaultCurrencyProvider, DefaultCurrencyProvider>();
+           containerRegistry.RegisterSingleton<ISerializationProvider, XMLSerializationProvider>();           
+           containerRegistry.RegisterSingleton<IDataProvider, FrankfurterDataProvider>();
+           containerRegistry.RegisterSingleton<ICurrencyRepository, CurrencyRepository>();
         }
     }
 }

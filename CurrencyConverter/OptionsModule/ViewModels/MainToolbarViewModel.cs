@@ -1,4 +1,6 @@
-﻿using Prism.Commands;
+﻿using CurrencyConverter.Core.Events;
+using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 
@@ -7,11 +9,13 @@ namespace OptionsModule.ViewModels
     public class MainToolbarViewModel : BindableBase
     {
         private readonly IDialogService dialogService;
+        private readonly IEventAggregator eventAggregator;
 
-        public MainToolbarViewModel(IDialogService dialogService)
+        public MainToolbarViewModel(IDialogService dialogService, IEventAggregator eventAggregator)
         {
             OpenOptionsCommand = new DelegateCommand(OpenOptionsExecute);
             this.dialogService = dialogService;
+            this.eventAggregator = eventAggregator;
         }
 
         public DelegateCommand OpenOptionsCommand { get; private set; }
@@ -22,7 +26,7 @@ namespace OptionsModule.ViewModels
             {
                 if (result.Result == ButtonResult.OK)
                 {
-                    // Saved to XML, Publish event to refresh all views
+                    eventAggregator.GetEvent<UpdateUIEvent>().Publish("UpdateViews");
                 }
             });
         }

@@ -49,7 +49,7 @@ namespace OptionsModule.Dialogs
 
         public string DisplayName => $"{DisplayCode} - {Name}";
 
-        public string Code { get; private set; }
+        public string Code { get; set; }
 
         public CurrencyItemViewModel Clone()
         {
@@ -66,6 +66,17 @@ namespace OptionsModule.Dialogs
             this.Name = from.Name;
             this.Symbol = from.Symbol;
             this.DisplayCode = from.DisplayCode;
+        }
+
+        public Currency ToModel()
+        {
+            return new Currency()
+            {
+                Code = this.Code,
+                Name = this.Name,
+                Symbol = this.Symbol,
+                DisplayCode = this.DisplayCode
+            };
         }
     }
 }

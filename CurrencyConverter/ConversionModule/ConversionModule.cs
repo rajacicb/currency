@@ -1,8 +1,10 @@
-﻿using ConversionModule.DataProviders.Frankfurter;
-using ConversionModule.Interfaces;
-using ConversionModule.Repository;
-using ConversionModule.ViewModels;
+﻿using ConversionModule.ViewModels;
 using ConversionModule.Views;
+using CurrencyConverter.Core.DataProviders;
+using CurrencyConverter.Core.DataProviders.Frankfurter;
+using CurrencyConverter.Core.Interfaces;
+using CurrencyConverter.Core.Repository;
+using CurrencyConverter.Core.Serializaton.XML;
 using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Mvvm;
@@ -29,8 +31,10 @@ namespace ConversionModule
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             ViewModelLocationProvider.Register<ConversionView, ConversionViewModel>();
-            containerRegistry.Register<IDataProvider, FrankfurterDataProvider>();
-            containerRegistry.Register<ICurrencyRepository, CurrencyRepository>();
+            containerRegistry.RegisterSingleton<IDefaultCurrencyProvider, DefaultCurrencyProvider>();
+            containerRegistry.RegisterSingleton<ISerializationProvider, XMLSerializationProvider>();
+            containerRegistry.RegisterSingleton<IDataProvider, FrankfurterDataProvider>();
+            containerRegistry.RegisterSingleton<ICurrencyRepository, CurrencyRepository>();
         }
     }
 }

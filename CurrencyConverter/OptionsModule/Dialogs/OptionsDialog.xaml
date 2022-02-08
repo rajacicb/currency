@@ -14,7 +14,7 @@
             <ColumnDefinition Width="100"/>
         </Grid.ColumnDefinitions>
 
-        <ListBox ItemsSource="{Binding CurrencyList}" SelectedItem="{Binding SelectedCurrency}" DisplayMemberPath="DisplayName" Margin="10"/>
+        <ListBox ItemsSource="{Binding CurrencyCollection}" SelectedItem="{Binding SelectedCurrency}" DisplayMemberPath="DisplayName" Margin="10"/>
         <StackPanel Grid.Column="1" Margin="10,10,20,0">
             <Button Command="{Binding AddCommand}" Content="Add" Margin="0,0,0,5"/>
             <Button Command="{Binding EditCommand}" Content="Edit" Margin="0,0,0,5"/>

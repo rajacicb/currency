@@ -1,10 +1,11 @@
-﻿using CurrencyConverter.Core.Models;
+﻿using CurrencyConverter.Core.Interfaces;
+using CurrencyConverter.Core.Models;
 
-namespace CurrencyConverter.Core.Helpers
+namespace CurrencyConverter.Core.DataProviders
 {
-    public static class StaticCurrencies
+    public class DefaultCurrencyProvider : IDefaultCurrencyProvider
     {
-        private static List<Currency> currencies = new List<Currency>(34)
+        private static List<Currency> defaultCurrencies = new List<Currency>(34)
         {
             new Currency("Australia Dollar", "AUD", "$"),
             new Currency("Bulgaria Lev", "BGN", "лв"),
@@ -42,9 +43,6 @@ namespace CurrencyConverter.Core.Helpers
             new Currency("South African Rand", "ZAR", "R")
         };
 
-        public static List<Currency> GetDefaultCurrencies()
-        {
-            return currencies;
-        }
+        public List<Currency> GetDefaultCurrencies() => defaultCurrencies;
     }
 }

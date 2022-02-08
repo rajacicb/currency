@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
-namespace ConversionModule.DataProviders.Frankfurter.DTO
+namespace CurrencyConverter.Core.DataProviders.Frankfurter.DTO
 {
     internal class CurrencyDTO
     {

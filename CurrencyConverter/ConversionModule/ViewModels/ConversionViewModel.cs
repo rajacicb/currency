@@ -1,8 +1,7 @@
 ﻿using ConversionModule.Helpers;
-using ConversionModule.Interfaces;
 using ConversionModule.Models;
 using CurrencyConverter.Core.Events;
-using CurrencyConverter.Core.Helpers;
+using CurrencyConverter.Core.Interfaces;
 using CurrencyConverter.Core.Models;
 using Prism.Events;
 using Prism.Mvvm;
@@ -14,12 +13,14 @@ using System.Threading.Tasks;
 
 namespace ConversionModule.ViewModels
 {
-    internal class ConversionViewModel : BindableBase
+    public class ConversionViewModel : BindableBase
     {
         #region Fields
         private ICurrencyRepository repository;
         private double amount = 0;
         private string conversionResult = string.Empty;
+        private ObservableCollection<Currency> fromCollection;
+        private ObservableCollection<Currency> toCollection;
         private Currency selectedFrom;
         private Currency selectedTo;
         private Dictionary<string, float> codeToRate = new Dictionary<string, float>();
@@ -30,11 +31,14 @@ namespace ConversionModule.ViewModels
         {
             this.repository = repository;
             var options = OptionsSerializer.LoadOptions();
-            ToCollection = new ObservableCollection<Currency>(StaticCurrencies.GetDefaultCurrencies());
-            FromCollection = new ObservableCollection<Currency>(StaticCurrencies.GetDefaultCurrencies());
-            SelectedTo = ToCollection.FirstOrDefault(x => x.Code.Equals(options.First().To));
-            SelectedFrom = FromCollection.FirstOrDefault(x => x.Code.Equals(options.First().From));
+
+            ToCollection = new ObservableCollection<Currency>(repository.GetAllCurrencies());
+            FromCollection = new ObservableCollection<Currency>(repository.GetAllCurrencies());
+            SelectedTo = SelectWithCodeOrFirst(ToCollection, options.First().To);
+            SelectedFrom = SelectWithCodeOrFirst(FromCollection, options.First().From);
+
             eventAggregator.GetEvent<SaveOptionsEvent>().Subscribe(OnSaveOptionsEvent);
+            eventAggregator.GetEvent<UpdateUIEvent>().Subscribe(OnUpdateUIEvent);
         }
         #endregion
 
@@ -49,7 +53,14 @@ namespace ConversionModule.ViewModels
             }
         }
 
-        public ObservableCollection<Currency> FromCollection { get; set; }
+        public ObservableCollection<Currency> FromCollection
+        {
+            get { return fromCollection; }
+            set
+            {
+                SetProperty(ref fromCollection, value);
+            }
+        }
 
         public Currency SelectedFrom
         {
@@ -61,7 +72,11 @@ namespace ConversionModule.ViewModels
             }
         }
 
-        public ObservableCollection<Currency> ToCollection { get; set; }
+        public ObservableCollection<Currency> ToCollection 
+        { 
+            get { return toCollection; }
+            set { SetProperty(ref toCollection, value); }   
+        }
 
         public Currency SelectedTo
         {
@@ -83,6 +98,11 @@ namespace ConversionModule.ViewModels
         #region Private Methods
         private void GetRatesAndRecalculate()
         {
+            if (SelectedFrom == null)
+            {
+                return;
+            }
+
             new Task(async () =>
             {
                 await GetRatesFromRepository(SelectedFrom.Code, ToCollection.Select(currency => currency.Code).ToList());
@@ -102,7 +122,7 @@ namespace ConversionModule.ViewModels
             }
             ConversionResult = $"{Math.Round(Amount, 2)} {selectedFrom.Name} = {ConvertAmount()} {selectedTo.Name}";
         }
-        
+
         private double ConvertAmount()
         {
             if (codeToRate.TryGetValue(selectedTo.Code, out float rate))
@@ -118,6 +138,25 @@ namespace ConversionModule.ViewModels
         private void OnSaveOptionsEvent(string message)
         {
             OptionsSerializer.SaveOptions(new List<CurrencyOption>(1) { new CurrencyOption() { From = SelectedFrom.Code, To = SelectedTo.Code } });
+        }
+
+        private void OnUpdateUIEvent(string obj)
+        {
+            string toCode = SelectedTo.Code;
+            string fromCode = SelectedFrom.Code;
+
+            ToCollection = new ObservableCollection<Currency>(repository.GetAllCurrencies());
+            FromCollection = new ObservableCollection<Currency>(repository.GetAllCurrencies());
+
+            SelectedTo = SelectWithCodeOrFirst(ToCollection, toCode);
+            SelectedFrom = SelectWithCodeOrFirst(FromCollection, fromCode);
+        }
+
+        private Currency SelectWithCodeOrFirst(ObservableCollection<Currency> collection, string code)
+        {
+            var selected = collection.FirstOrDefault(x => x.Code.Equals(code));
+
+            return selected != null ? selected : collection.First();
         }
         #endregion
     }
