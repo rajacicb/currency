@@ -12,7 +12,12 @@ namespace CurrencyConverter
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : PrismApplication
-    {
+    { 
+        public App()
+        {
+            FrameworkCompatibilityPreferences.KeepTextBoxDisplaySynchronizedWithTextProperty = false;
+        }
+
         protected override Window CreateShell()
         {
             return Container.Resolve<MainWindow>();

@@ -5,7 +5,7 @@
              prism:ViewModelLocator.AutoWireViewModel="True">
 
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Background="Transparent">
-        <Button Command="{Binding OpenOptionsCommand}" Margin="5" BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+        <Button Command="{Binding OpenOptionsCommand}" Margin="5" BorderThickness="0" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" ToolTip="Settings">
             <Image Source="..\Images\imgOptions.png" Height="48" Width="48"/>
         </Button>
     </StackPanel>

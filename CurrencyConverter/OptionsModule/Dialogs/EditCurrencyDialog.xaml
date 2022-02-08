@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="OptionsModule.Dialogs.EditCurrencyDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                       xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="100"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Text="Name" />
+        <TextBlock Text="Symbol" Grid.Column="1"/>
+        <TextBlock Text="Code" Grid.Column="2" />
+
+        <TextBox Text="{Binding CurrencyItem.Name}" Grid.Row="1"/>
+        <TextBox Text="{Binding CurrencyItem.Symbol}" Grid.Row="1" Grid.Column="1" MaxLength="1"/>
+        <TextBox Text="{Binding CurrencyItem.DisplayCode}" Grid.Row="1" Grid.Column="2" MaxLength="3"/>
+
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="3" Margin="5" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Command="{Binding OKCommand}" Content="OK"  Width="75" Height="25"/>
+            <Button Command="{Binding CancelCommand}" Content="Cancel"  Width="75" Height="25" Margin="5,0,0,0"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

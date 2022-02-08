@@ -36,7 +36,7 @@
             <TextBlock Text="To" Grid.Column="2" />
             <ComboBox ItemsSource="{Binding ToCollection}" SelectedItem="{Binding SelectedTo}" DisplayMemberPath="DisplayName" Grid.Row="1" Grid.Column="2" Margin="25,0,10,10" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" Background="AliceBlue"/>
 
-            <TextBlock Text="{Binding ConversionResult}" Grid.Row="2" Grid.ColumnSpan="3" />
+            <TextBlock Text="{Binding ConversionResult}" Grid.Row="2" Grid.ColumnSpan="3" TextWrapping="WrapWithOverflow"/>
         </Grid>
     </Border>
 </UserControl>

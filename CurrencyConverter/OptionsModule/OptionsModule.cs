@@ -26,6 +26,7 @@ namespace OptionsModule
         {
            ViewModelLocationProvider.Register<MainToolbarView, MainToolbarViewModel>();
            containerRegistry.RegisterDialog<OptionsDialog, OptionsDialogViewModel>();
+           containerRegistry.RegisterDialog<EditCurrencyDialog, EditCurrencyDialogViewModel>();
         }
     }
 }

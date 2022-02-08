@@ -6,6 +6,7 @@ using CurrencyConverter.Core.Helpers;
 using CurrencyConverter.Core.Models;
 using Prism.Events;
 using Prism.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace ConversionModule.ViewModels
     {
         #region Fields
         private ICurrencyRepository repository;
-        private float amount = 0;
+        private double amount = 0;
         private string conversionResult = string.Empty;
         private Currency selectedFrom;
         private Currency selectedTo;
@@ -38,7 +39,7 @@ namespace ConversionModule.ViewModels
         #endregion
 
         #region Properties
-        public float Amount
+        public double Amount
         {
             get { return amount; }
             set
@@ -99,14 +100,14 @@ namespace ConversionModule.ViewModels
             {
                 return;
             }
-            ConversionResult = $"{Amount} {selectedFrom.Name} = {Calculate()} {selectedTo.Name}";
+            ConversionResult = $"{Math.Round(Amount, 2)} {selectedFrom.Name} = {ConvertAmount()} {selectedTo.Name}";
         }
-
-        private float Calculate()
+        
+        private double ConvertAmount()
         {
             if (codeToRate.TryGetValue(selectedTo.Code, out float rate))
             {
-                return amount * rate;
+                return Math.Round(amount * rate, 2);
             }
             else
             {

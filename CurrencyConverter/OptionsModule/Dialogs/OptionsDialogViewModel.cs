@@ -1,18 +1,20 @@
-﻿using CurrencyConverter.Core.Models;
+﻿using CurrencyConverter.Core.Helpers;
+using CurrencyConverter.Core.Models;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace OptionsModule.Dialogs
 {
     internal class OptionsDialogViewModel : BindableBase, IDialogAware
     {
         #region Fields
-        private ObservableCollection<CurrencyDetailViewModel> currencyList;
-        private CurrencyDetailViewModel selectedCurrency;
+        private ObservableCollection<CurrencyItemViewModel> currencyList;
+        private CurrencyItemViewModel selectedCurrency;
         private readonly IDialogService dialogService;
         #endregion
 
@@ -22,21 +24,21 @@ namespace OptionsModule.Dialogs
             OKCommand = new DelegateCommand(OKCommandExecute);
             CancelCommand = new DelegateCommand(CancelCommandExecute);
             AddCommand = new DelegateCommand(AddComandExecute);
-            EditCommand = new DelegateCommand(EditCommandExecute, CanEditDeleteCommandExecute);
-            DeleteCommand = new DelegateCommand(DeleteCommandExecute, CanEditDeleteCommandExecute);
+            EditCommand = new DelegateCommand(EditCommandExecute, CanEditCommandExecute);
+            DeleteCommand = new DelegateCommand(DeleteCommandExecute, CanDeleteCommandExecute);
             this.dialogService = dialogService;
             PopulateCurrencyList();
         }
         #endregion
 
         #region Properties
-        public ObservableCollection<CurrencyDetailViewModel> CurrencyList
+        public ObservableCollection<CurrencyItemViewModel> CurrencyList
         {
             get { return currencyList; }
             set { SetProperty(ref currencyList, value); }
         }
 
-        public CurrencyDetailViewModel SelectedCurrency
+        public CurrencyItemViewModel SelectedCurrency
         {
             get { return selectedCurrency; }
             set
@@ -63,27 +65,57 @@ namespace OptionsModule.Dialogs
         #region Command Methods
         private void AddComandExecute()
         {
+            var paramaters = new DialogParameters();
+            paramaters.Add("selectedCurrency", new CurrencyItemViewModel() { Name = "New Currency" });
+
+            dialogService.ShowDialog("EditCurrencyDialog", paramaters, result =>
+            {
+                if (result.Result == ButtonResult.OK)
+                {
+                    if (result.Parameters.TryGetValue("editedModel", out CurrencyItemViewModel currency))
+                    {
+                        CurrencyList.Add(currency);
+                    }
+                }
+            });
         }
 
         private void EditCommandExecute()
         {
+            var paramaters = new DialogParameters();
+            paramaters.Add("selectedCurrency", SelectedCurrency.Clone());
+
+            dialogService.ShowDialog("EditCurrencyDialog", paramaters, result =>
+            {
+                if (result.Result == ButtonResult.OK)
+                {
+                    if (result.Parameters.TryGetValue("editedModel", out CurrencyItemViewModel currency))
+                    {
+                        SelectedCurrency.CopyFrom(currency);
+                    }
+                }
+            });
         }
 
         private void DeleteCommandExecute()
         {
-            // can't remove what are static default values
             CurrencyList.Remove(SelectedCurrency);
         }
 
-        private bool CanEditDeleteCommandExecute()
+        private bool CanEditCommandExecute()
         {
             return SelectedCurrency != null;
+        }
+
+        // Only allow removal of user added currencies
+        private bool CanDeleteCommandExecute()
+        {
+            return SelectedCurrency != null && !StaticCurrencies.GetDefaultCurrencies().Any(x => x.Code == SelectedCurrency.Code);
         }
 
         private void OKCommandExecute()
         {
             // Save to XML file
-
             RequestClose?.Invoke(new DialogResult(ButtonResult.OK));
         }
 
@@ -115,14 +147,14 @@ namespace OptionsModule.Dialogs
         #region Private Methods
         private void PopulateCurrencyList()
         {
-            List<CurrencyDetailViewModel> currencies = new List<CurrencyDetailViewModel>();
+            List<CurrencyItemViewModel> currencies = new List<CurrencyItemViewModel>();
 
-            foreach (Currency item in CurrencyConverter.Core.Helpers.StaticCurrencies.GetDefaultCurrencies())
+            foreach (Currency item in StaticCurrencies.GetDefaultCurrencies())
             {
-                currencies.Add(new CurrencyDetailViewModel(item));
+                currencies.Add(new CurrencyItemViewModel(item));
             }
 
-            CurrencyList = new ObservableCollection<CurrencyDetailViewModel>(currencies);
+            CurrencyList = new ObservableCollection<CurrencyItemViewModel>(currencies);
         }
         #endregion
     }

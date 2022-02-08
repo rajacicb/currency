@@ -3,20 +3,21 @@ using Prism.Mvvm;
 
 namespace OptionsModule.Dialogs
 {
-    internal class CurrencyDetailViewModel : BindableBase
+    internal class CurrencyItemViewModel : BindableBase
     {
         private string name = string.Empty;
         private string symbol = string.Empty;
         private string displayCode = string.Empty;
 
-        public CurrencyDetailViewModel(Currency model)
+        public CurrencyItemViewModel(Currency model)
         {
-            name = model.Name;
-            symbol = model.Symbol;
-            displayCode = model.DisplayCode;
+            Name = model.Name;
+            Symbol = model.Symbol;
+            DisplayCode = model.DisplayCode;
+            Code = model.Code;
         }
 
-        public CurrencyDetailViewModel()
+        public CurrencyItemViewModel()
         {
         }
 
@@ -48,9 +49,11 @@ namespace OptionsModule.Dialogs
 
         public string DisplayName => $"{DisplayCode} - {Name}";
 
-        public CurrencyDetailViewModel Clone()
+        public string Code { get; private set; }
+
+        public CurrencyItemViewModel Clone()
         {
-            return new CurrencyDetailViewModel()
+            return new CurrencyItemViewModel()
             {
                 Name = this.Name,
                 Symbol = this.Symbol,
@@ -58,7 +61,7 @@ namespace OptionsModule.Dialogs
             };
         }
 
-        public void CopyFrom(CurrencyDetailViewModel from)
+        public void CopyFrom(CurrencyItemViewModel from)
         {
             this.Name = from.Name;
             this.Symbol = from.Symbol;
