@@ -3,7 +3,25 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
               xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True">
-    <Grid>
+    <prism:Dialog.WindowStyle>
+        <Style TargetType="Window">
+            <Setter Property="ResizeMode" Value="NoResize" />
+            <Setter Property="Width" Value="312" />
+            <Setter Property="Height" Value="374" />
+        </Style>
+    </prism:Dialog.WindowStyle>
+
+    <UserControl.Resources>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="AliceBlue"/>
+            <Setter Property="Width" Value="75"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="#33BDE3">
         <Grid.RowDefinitions>
             <RowDefinition Height="300"/>
             <RowDefinition Height="Auto"/>
@@ -14,16 +32,16 @@
             <ColumnDefinition Width="100"/>
         </Grid.ColumnDefinitions>
 
-        <ListBox ItemsSource="{Binding CurrencyCollection}" SelectedItem="{Binding SelectedCurrency}" DisplayMemberPath="DisplayName" Margin="10"/>
+        <ListBox ItemsSource="{Binding CurrencyCollection}" SelectedItem="{Binding SelectedCurrency}" DisplayMemberPath="DisplayName" Margin="15,10,10,10" Background="AliceBlue"/>
         <StackPanel Grid.Column="1" Margin="10,10,20,0">
-            <Button Command="{Binding AddCommand}" Content="Add" Margin="0,0,0,5"/>
-            <Button Command="{Binding EditCommand}" Content="Edit" Margin="0,0,0,5"/>
-            <Button Command="{Binding DeleteCommand}" Content="Delete" />
+            <Button Command="{Binding AddCommand}" Content="Add" Margin="1,0,1,5" Width="67"/>
+            <Button Command="{Binding EditCommand}" Content="Edit" Margin="1,0,1,5" Width="67"/>
+            <Button Command="{Binding DeleteCommand}" Content="Delete" Margin="1,0,1,0" Width="67"/>
         </StackPanel>
 
         <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="5" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Command="{Binding OKCommand}" Content="OK"  Width="75" Height="25"/>
-            <Button Command="{Binding CancelCommand}" Content="Cancel"  Width="75" Height="25" Margin="5,0,0,0"/>
+            <Button Command="{Binding OKCommand}" Content="OK" />
+            <Button Command="{Binding CancelCommand}" Content="Cancel"  Margin="5,0,0,0"/>
         </StackPanel>
     </Grid>
 </UserControl>

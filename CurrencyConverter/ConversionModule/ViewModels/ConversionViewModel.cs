@@ -18,6 +18,7 @@ namespace ConversionModule.ViewModels
         #region Fields
         private ICurrencyRepository repository;
         private double amount = 0;
+        private string symbol = string.Empty;
         private string conversionResult = string.Empty;
         private ObservableCollection<Currency> fromCollection;
         private ObservableCollection<Currency> toCollection;
@@ -53,13 +54,16 @@ namespace ConversionModule.ViewModels
             }
         }
 
+        public string Symbol
+        {
+            get { return symbol; }
+            set { SetProperty(ref symbol, value); }
+        }
+
         public ObservableCollection<Currency> FromCollection
         {
             get { return fromCollection; }
-            set
-            {
-                SetProperty(ref fromCollection, value);
-            }
+            set { SetProperty(ref fromCollection, value); }
         }
 
         public Currency SelectedFrom
@@ -69,6 +73,7 @@ namespace ConversionModule.ViewModels
             {
                 SetProperty(ref selectedFrom, value);
                 GetRatesAndRecalculate();
+                Symbol = value.Symbol;
             }
         }
 

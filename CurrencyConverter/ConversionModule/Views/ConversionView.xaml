@@ -12,7 +12,7 @@
             </Grid.RowDefinitions>
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="230" />
                 <ColumnDefinition Width="220" />
                 <ColumnDefinition Width="220" />
             </Grid.ColumnDefinitions>
@@ -27,8 +27,12 @@
                 </Style>
             </Grid.Resources>
 
-            <TextBlock Text="Amount"/>
-            <TextBox Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Margin="25,0,10,10" HorizontalAlignment="Stretch" Background="AliceBlue" VerticalContentAlignment="Center"/>
+            <TextBlock Text="Amount" Margin="56,0,0,0" Width="94"/>
+            <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="25,0,10,10" >
+                <Label Content="{Binding Symbol, UpdateSourceTrigger=PropertyChanged}" FontSize="14" Background="Transparent" 
+                       Foreground="White" MaxWidth="30" Width="30" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"/>
+                <TextBox Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged}" Background="AliceBlue" VerticalContentAlignment="Center" Width="165"/>
+            </StackPanel>
 
             <TextBlock Text="From" Grid.Column="1"/>
             <ComboBox ItemsSource="{Binding FromCollection}" SelectedItem="{Binding SelectedFrom}" DisplayMemberPath="DisplayName" Grid.Row="1" Grid.Column="1" Margin="25,0,10,10" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" Background="AliceBlue"/>
@@ -36,7 +40,7 @@
             <TextBlock Text="To" Grid.Column="2" />
             <ComboBox ItemsSource="{Binding ToCollection}" SelectedItem="{Binding SelectedTo}" DisplayMemberPath="DisplayName" Grid.Row="1" Grid.Column="2" Margin="25,0,10,10" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" Background="AliceBlue"/>
 
-            <TextBlock Text="{Binding ConversionResult}" Grid.Row="2" Grid.ColumnSpan="3" TextWrapping="WrapWithOverflow"/>
+            <TextBlock Text="{Binding ConversionResult}" Grid.Row="2" Grid.ColumnSpan="3" TextWrapping="WrapWithOverflow" Margin="40,0,0,0"/>
         </Grid>
     </Border>
 </UserControl>
