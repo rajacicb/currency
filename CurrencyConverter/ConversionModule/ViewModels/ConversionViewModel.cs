@@ -72,8 +72,11 @@ namespace ConversionModule.ViewModels
             set
             {
                 SetProperty(ref selectedFrom, value);
-                GetRatesAndRecalculate();
-                Symbol = value.Symbol;
+                if (value != null)
+                {
+                    GetRatesAndRecalculate();
+                    Symbol = value.Symbol;
+                }                         
             }
         }
 
@@ -103,11 +106,6 @@ namespace ConversionModule.ViewModels
         #region Private Methods
         private void GetRatesAndRecalculate()
         {
-            if (SelectedFrom == null)
-            {
-                return;
-            }
-
             new Task(async () =>
             {
                 await GetRatesFromRepository(SelectedFrom.Code, ToCollection.Select(currency => currency.Code).ToList());
